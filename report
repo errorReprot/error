@@ -1,0 +1,70 @@
+
+
+public class Main {
+    public static void main(String[] args) {
+
+        //Inheritance = One class inherits the attributes and
+        //    methods from another class
+        //    child <- Parent  <- Grand Parent
+
+//        Cat cat1 = new Cat();
+//
+//        cat1.eat(); // In the cat class there are no codes but the method
+//        // in the Animal call runs because it inherits from the Animal class
+//
+//        Dog doggy = new Dog();
+//
+//        doggy.eat();
+//
+//        doggy.speak();
+//        System.out.println();
+//
+//        Organisms org = new Organisms();
+//        System.out.println(org.isActive);
+//
+//        Plant plant = new Plant();
+//
+//
+//        plant.photo();
+
+//        //Super keyword refers the parent class
+//
+//        Person person = new Person("Chamara", "Madusanka");
+//
+//        person.showName();
+//
+//        Student student = new Student("Larry", "Potter", 3.78);
+//        student.showName();
+//        student.disGPA();
+//
+//        Employee emp1 = new Employee("Micheal", "Jackson ", 10000);
+//
+//        emp1.showName();
+//        emp1.showSalary();
+
+//          //Method Overriding
+//
+//        Dog dog = new Dog();
+//        Cat cat = new Cat();
+//        Fish fish = new Fish();
+//
+//        dog.move();
+//        cat.move();
+//        fish.move();
+//
+
+        //toString()
+
+        Car car =new Car("Nissan", "GTR-34", 1998, "white");
+
+        System.out.println(car);
+
+        Car car1 = new Car("BMW", "M-5", 2001, "Silver");
+
+        System.out.println(car1);
+
+
+
+
+    }
+}
