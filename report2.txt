@@ -1,101 +1,40 @@
-import java.util.Scanner;
-
-public class SeatReservation {
-
-    public static void main(String[] args) {
-
-        // ─────────────────────────────────────────────
-        //  STEP 1: Create and initialize the seat grid
-        //  5 rows × 8 columns  →  40 seats total
-        //  Seats are numbered 1 – 40, row by row.
-        // ─────────────────────────────────────────────
-        String[][] seats = new String[5][8];
-
-        int seatNumber = 1;
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 8; col++) {
-                seats[row][col] = String.valueOf(seatNumber);
-                seatNumber++;
-            }
-        }
-
-        Scanner scanner = new Scanner(System.in);
-
-        // ─────────────────────────────────────────────
-        //  STEP 2: Main loop – keeps running until
-        //          the user types 0 to exit.
-        // ─────────────────────────────────────────────
-        while (true) {
-
-            // Show the current state of the hall
-            System.out.println("\n========================================");
-            System.out.println("        SEAT RESERVATION SYSTEM        ");
-            System.out.println("========================================");
-            displaySeats(seats);
-
-            System.out.println("\nEnter a seat number to reserve (1–40)");
-            System.out.print("or 0 to exit: ");
-
-            // ── Input validation: make sure the user typed a number ──
-            if (!scanner.hasNextInt()) {
-                System.out.println("❌  Please enter a valid number.");
-                scanner.next();   // discard the bad input
-                continue;
-            }
-
-            int input = scanner.nextInt();
-
-            // ── Exit condition ──
-            if (input == 0) {
-                System.out.println("\nThank you! Goodbye. 👋");
-                break;
-            }
-
-            // ── Range check ──
-            if (input < 1 || input > 40) {
-                System.out.println("❌  Invalid seat number. Please choose between 1 and 40.");
-                continue;
-            }
-
-            // ─────────────────────────────────────────────
-            //  STEP 3: Find the seat in the 2D array
-            //  Convert the seat number → (row, col) index
-            // ─────────────────────────────────────────────
-            int targetRow = (input - 1) / 8;   // which row  (0-based)
-            int targetCol = (input - 1) % 8;   // which column (0-based)
-
-            // ── Already reserved? ──
-            if (seats[targetRow][targetCol].equals("X")) {
-                System.out.println("⚠️   Seat " + input + " is already reserved. Ok.");
-            } else {
-                // ── Reserve the seat ──
-                seats[targetRow][targetCol] = "X";
-                System.out.println("✅  Seat " + input + " successfully reserved!");
-            }
-        }
-
-        scanner.close();
-    }
-
-    // ─────────────────────────────────────────────────────────
-    //  Helper method: prints the seating grid nicely
-    //  Available seats show their number; reserved seats show X
-    // ─────────────────────────────────────────────────────────
-    static void displaySeats(String[][] seats) {
-        System.out.println("\n  Col:  1    2    3    4    5    6    7    8");
-        System.out.println("       ─────────────────────────────────────");
-
-        for (int row = 0; row < seats.length; row++) {
-            System.out.printf("Row %d |", row + 1);   // row label
-
-            for (int col = 0; col < seats[row].length; col++) {
-                // Right-align each cell in a field of 4 characters
-                System.out.printf("%4s ", seats[row][col]);
-            }
-
-            System.out.println();
-        }
-
-        System.out.println("\n  [ X = Reserved ]");
-    }
-}
+                    ,;-.
+                  ,((--\).
+                 /        \
+                |          |
+                |          |
+               (,'"`.  ,'"`.)
+               :     \/     ;
+               `.o  ,'`.  o,'
+               (|`>'`--'`<'|)            ,-,
+   ,.           |/        \|         ,-./ /
+ _ | \,-.       (          )        | `-'`--.
+( `' (_/|__      \   (o   /       ,-'     ,-'
+ ;         )    ,|`.  - ,'|.      `-.   ) \
+ | (    ,-'   _/ `-.`""',-' \---.   /      ;
+ |     |   ,-'  \  /\  / \  |   |--/       |
+ |     |_,|    / \/  \/   \/\   |          |
+ |     `  \   |              \  /        ,'
+ |         \  |              | /      _,'
+ :          \ ,              `/------'
+  `-.___,---')                `.
+           ,'                   \
+          /                      \
+         :                        :
+         |                      _,|
+          \--.___         __,--' ;
+           `.    `"""""""'      ,'
+             |                  |
+             |      .____,      |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+   -hrr-     |         |        |
+             |         |        |
+             |-._____,-|-.____,-|
+             |_        |_       |
+           ,'  `------'| `-----' \
+          /           _|_         \
+          `--._____,-'   `-.___,-'
