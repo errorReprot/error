@@ -1,203 +1,352 @@
-// ============================================================
-// Abstract Class: Player
-// Acts as the blueprint for Batsman and Bowler
-// ============================================================
-abstract class Player {
-    // Attributes shared by all players
-    protected int playerID;
-    protected String name;
-    protected String country;
-    protected int[] scores;
+//Employee Management System
+import java.util.Scanner;
+class Employee {
+    // Private instance variables (Encapsulation)
+    private int id;
+    private String name;
+    private String department;
+    private double salary;
 
-    // Constructor: sets up basic player info
-    public Player(int playerID, String name, String country, int[] scores) {
-        this.playerID = playerID;
+    // Static variable
+    private static int employeeCount = 0;
+
+    // Constructor using 'this' keyword
+    public Employee(int id, String name, String department, double salary) {
+        this.id = id;
         this.name = name;
-        this.country = country;
-        this.scores = scores;
+        this.department = department;
+        this.salary = salary;
+        employeeCount++; // increment count when object is created
     }
 
     // Getters
-    public int getPlayerID()   { return playerID; }
-    public String getName()    { return name; }
-    public String getCountry() { return country; }
-
-    // Abstract methods — subclasses MUST implement these
-    public abstract void addScore(int score);
-    public abstract void printDetails();
-}
-
-
-// ============================================================
-// Subclass: Batsman
-// A Batsman has "runs" (sum of all scores)
-// ============================================================
-class Batsman extends Player {
-    private int runs; // total runs scored
-
-    public Batsman(int playerID, String name, String country, int[] scores) {
-        super(playerID, name, country, scores);
-        // Calculate total runs from initial scores array
-        runs = 0;
-        for (int s : scores) {
-            runs += s;
-        }
+    public int getId() {
+        return id;
     }
 
-    // Add a new score (must be 0–100 for a batsman)
-    @Override
-    public void addScore(int score) {
-        if (score < 0 || score > 100) {
-            System.out.println("Invalid score for batsman: " + score + " (must be 0–100)");
-            return;
-        }
-        // Expand the scores array by 1 and add new score
-        int[] newScores = new int[scores.length + 1];
-        for (int i = 0; i < scores.length; i++) newScores[i] = scores[i];
-        newScores[scores.length] = score;
-        scores = newScores;
-        runs += score; // update total runs
+    public String getName() {
+        return name;
     }
 
-    public int getRuns() { return runs; }
+    public String getDepartment() {
+        return department;
+    }
 
-    @Override
-    public void printDetails() {
-        System.out.println("--- Batsman ---");
-        System.out.println("ID      : " + playerID);
-        System.out.println("Name    : " + name);
-        System.out.println("Country : " + country);
-        System.out.print("Scores  : ");
-        for (int s : scores) System.out.print(s + " ");
-        System.out.println();
-        System.out.println("Total Runs: " + runs);
-        System.out.println();
+    public double getSalary() {
+        return salary;
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    // Static method
+    public static int getEmployeeCount() {
+        return employeeCount;
+    }
+
+    // Display method
+    public void displayDetails() {
+        System.out.println("Employee ID: " + id);
+        System.out.println("Name       : " + name);
+        System.out.println("Department : " + department);
+        System.out.println("Salary     : " + salary);
+        System.out.println("----------------------------");
     }
 }
+public class CompanyApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
+        // Ask user for number of employees
+        System.out.print("Enter number of employees: ");
+        int n = sc.nextInt();
+        sc.nextLine(); // consume newline
 
-// ============================================================
-// Subclass: Bowler
-// A Bowler has "wickets" (sum of all scores)
-// ============================================================
-class Bowler extends Player {
-    private int wickets; // total wickets taken
+        // Create array
+        Employee[] employees = new Employee[n];
 
-    public Bowler(int playerID, String name, String country, int[] scores) {
-        super(playerID, name, country, scores);
-        // Calculate total wickets from initial scores array
-        wickets = 0;
-        for (int s : scores) {
-            wickets += s;
+        // Input employee details
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for Employee " + (i + 1));
+
+            System.out.print("ID: ");
+            int id = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Department: ");
+            String dept = sc.nextLine();
+
+            System.out.print("Salary: ");
+            double salary = sc.nextDouble();
+            sc.nextLine();
+
+            // Create Employee object
+            employees[i] = new Employee(id, name, dept, salary);
         }
-    }
 
-    // Add a new score (must be 0–10 for a bowler)
-    @Override
-    public void addScore(int score) {
-        if (score < 0 || score > 10) {
-            System.out.println("Invalid score for bowler: " + score + " (must be 0–10)");
-            return;
+        // Display all employees
+        System.out.println("\n--- Employee Details ---");
+        for (Employee emp : employees) {
+            emp.displayDetails();
         }
-        int[] newScores = new int[scores.length + 1];
-        for (int i = 0; i < scores.length; i++) newScores[i] = scores[i];
-        newScores[scores.length] = score;
-        scores = newScores;
-        wickets += score;
-    }
 
-    public int getWickets() { return wickets; }
+        // Display total employees
+        System.out.println("Total Employees: " + Employee.getEmployeeCount());
 
-    @Override
-    public void printDetails() {
-        System.out.println("--- Bowler ---");
-        System.out.println("ID      : " + playerID);
-        System.out.println("Name    : " + name);
-        System.out.println("Country : " + country);
-        System.out.print("Scores  : ");
-        for (int s : scores) System.out.print(s + " ");
-        System.out.println();
-        System.out.println("Total Wickets: " + wickets);
-        System.out.println();
+        sc.close();
     }
 }
 
 
-// ============================================================
-// Main Application
-// ============================================================
-public class CricketApp {
+//Student Course Registration System
+import java.util.Scanner;
+// Student class
+class Student {
+    // Private fields
+    private int id;
+    private String name;
+    private String course;
+    private double marks;
 
-    // --- Helper: Find batsman with highest runs ---
-    public static void printHighestRunsBatsman(Batsman[] batsmen) {
-        Batsman best = batsmen[0];
-        for (Batsman b : batsmen) {
-            if (b.getRuns() > best.getRuns()) best = b;
-        }
-        System.out.println("=== Batsman with Highest Runs ===");
-        best.printDetails();
+    // Static field
+    static String collegeName = "National College";
+
+    // Getters and Setters
+    public int getId() {
+        return id;
     }
 
-    // --- Helper: Find bowler with highest wickets ---
-    public static void printHighestWicketsBowler(Bowler[] bowlers) {
-        Bowler best = bowlers[0];
-        for (Bowler b : bowlers) {
-            if (b.getWickets() > best.getWickets()) best = b;
-        }
-        System.out.println("=== Bowler with Highest Wickets ===");
-        best.printDetails();
+    public void setId(int id) {
+        this.id = id;
     }
 
-    // --- Helper: Print all players from a given country ---
-    public static void printPlayersByCountry(Batsman[] batsmen, Bowler[] bowlers, String country) {
-        System.out.println("=== Players from " + country + " ===");
-        for (Batsman b : batsmen) {
-            if (b.getCountry().equalsIgnoreCase(country)) b.printDetails();
-        }
-        for (Bowler b : bowlers) {
-            if (b.getCountry().equalsIgnoreCase(country)) b.printDetails();
-        }
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
+    public double getMarks() {
+        return marks;
+    }
+
+    public void setMarks(double marks) {
+        this.marks = marks;
+    }
+
+    // Method to display student info
+    public void displayStudentInfo() {
+        System.out.println("\n--- Student Details ---");
+        System.out.println("College Name: " + collegeName);
+        System.out.println("ID: " + id);
+        System.out.println("Name: " + name);
+        System.out.println("Course: " + course);
+        System.out.println("Marks: " + marks);
+    }
+}
+// Main class
+public class StudentApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Ask number of students
+        System.out.print("Enter number of students (max 5): ");
+        int n = sc.nextInt();
+
+        if (n > 5) {
+            System.out.println("Maximum limit is 5 students.");
+            n = 5;
+        }
+
+        // Create array
+        Student[] students = new Student[n];
+
+        // Input student details
+        for (int i = 0; i < n; i++) {
+            students[i] = new Student();
+
+            System.out.println("\nEnter details for student " + (i + 1));
+
+            System.out.print("Enter ID: ");
+            students[i].setId(sc.nextInt());
+
+            sc.nextLine(); // consume newline
+
+            System.out.print("Enter Name: ");
+            students[i].setName(sc.nextLine());
+
+            System.out.print("Enter Course: ");
+            students[i].setCourse(sc.nextLine());
+
+            System.out.print("Enter Marks: ");
+            students[i].setMarks(sc.nextDouble());
+        }
+
+        // Display student details
+        System.out.println("\n===== Student Information =====");
+        for (int i = 0; i < n; i++) {
+            students[i].displayStudentInfo();
+        }
+
+        sc.close();
+    }
+}
+
+
+//Smart Utility Billing System
+// Customer Class (Encapsulation)
+class Customer {
+    private final int customerId; // read-only
+    private String name;
+    private String address;
+
+    public Customer(int customerId, String name, String address) {
+        this.customerId = customerId;
+        setName(name);
+        this.address = address;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+}
+// Abstract Class (Abstraction)
+abstract class UtilityAccount {
+    private Customer customer;
+    private double unitsConsumed;
+    protected double billAmount; // protected so subclasses can calculate
+
+    public UtilityAccount(Customer customer, double unitsConsumed) {
+        this.customer = customer;
+        setUnitsConsumed(unitsConsumed);
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public double getUnitsConsumed() {
+        return unitsConsumed;
+    }
+
+    public void setUnitsConsumed(double unitsConsumed) {
+        if (unitsConsumed < 0) {
+            throw new IllegalArgumentException("Units cannot be negative");
+        }
+        this.unitsConsumed = unitsConsumed;
+    }
+
+    public double getBillAmount() {
+        return billAmount;
+    }
+
+    // Abstract methods
+    public abstract void calculateBill();
+
+    public void generateBill() {
+        System.out.println("Customer ID: " + customer.getCustomerId());
+        System.out.println("Name: " + customer.getName());
+        System.out.println("Units Consumed: " + unitsConsumed);
+        System.out.println("Total Bill: $" + billAmount);
+        System.out.println("---------------------------");
+    }
+}
+// ElectricityAccount (Inheritance)
+class ElectricityAccount extends UtilityAccount {
+    private static final double RATE = 6;
+
+    public ElectricityAccount(Customer customer, double units) {
+        super(customer, units);
+    }
+
+    @Override
+    public void calculateBill() {
+        billAmount = getUnitsConsumed() * RATE;
+
+        if (getUnitsConsumed() > 300) {
+            billAmount += billAmount * 0.10; // 10% surcharge
+        }
+    }
+}
+// WaterAccount (Inheritance)
+class WaterAccount extends UtilityAccount {
+    private static final double RATE = 2;
+
+    public WaterAccount(Customer customer, double units) {
+        super(customer, units);
+    }
+
+    @Override
+    public void calculateBill() {
+        billAmount = getUnitsConsumed() * RATE;
+
+        if (getUnitsConsumed() > 500) {
+            billAmount += 150; // fixed charge
+        }
+    }
+}
+// Main Class (Polymorphism)
+public class UtilityApp {
     public static void main(String[] args) {
 
-        // ---- Create 5 Batsmen ----
-        Batsman[] batsmen = {
-            new Batsman(1, "Sachin Tendulkar",  "India",     new int[]{85, 100, 73, 50, 90}),
-            new Batsman(2, "Virat Kohli",        "India",     new int[]{70, 88, 95, 40, 66}),
-            new Batsman(3, "Ricky Ponting",      "Australia", new int[]{60, 75, 80, 55, 90}),
-            new Batsman(4, "Brian Lara",         "West Indies",new int[]{99, 100, 88, 70, 45}),
-            new Batsman(5, "David Warner",       "Australia", new int[]{55, 65, 80, 90, 72})
-        };
+        Customer c1 = new Customer(1, "Kamal", "Negombo");
+        Customer c2 = new Customer(2, "Nimal", "Colombo");
 
-        // ---- Create 5 Bowlers ----
-        Bowler[] bowlers = {
-            new Bowler(6,  "Muttiah Muralitharan","Sri Lanka",  new int[]{5, 7, 4, 6, 8}),
-            new Bowler(7,  "Shane Warne",          "Australia",  new int[]{3, 6, 5, 4, 7}),
-            new Bowler(8,  "Glenn McGrath",         "Australia",  new int[]{4, 5, 6, 3, 5}),
-            new Bowler(9,  "James Anderson",        "England",    new int[]{3, 4, 5, 6, 2}),
-            new Bowler(10, "Wasim Akram",           "Pakistan",   new int[]{6, 5, 7, 4, 8})
-        };
+        // Polymorphism: using parent reference
+        UtilityAccount[] accounts = new UtilityAccount[2];
 
-        // ---- 1. Print all players ----
-        System.out.println("========== ALL BATSMEN ==========");
-        for (Batsman b : batsmen) b.printDetails();
+        accounts[0] = new ElectricityAccount(c1, 350);
+        accounts[1] = new WaterAccount(c2, 600);
 
-        System.out.println("========== ALL BOWLERS ==========");
-        for (Bowler b : bowlers) b.printDetails();
-
-        // ---- 2. Add score of 14 to Batsman 1 ----
-        System.out.println("=== Adding score 14 to Batsman 1 ===");
-        batsmen[0].addScore(14);
-        batsmen[0].printDetails();
-
-        // ---- 3. Batsman with highest runs ----
-        printHighestRunsBatsman(batsmen);
-
-        // ---- 4. Bowler with highest wickets ----
-        printHighestWicketsBowler(bowlers);
-
-        // ---- 5. All players from Australia ----
-        printPlayersByCountry(batsmen, bowlers, "Australia");
+        for (UtilityAccount acc : accounts) {
+            acc.calculateBill();   // polymorphic call
+            acc.generateBill();    // same method, different behavior
+        }
     }
 }
