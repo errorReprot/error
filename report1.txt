@@ -1,11 +1,11 @@
-//seat
-
+// Seat
 import java.util.Scanner;
 
 public class SeatReservation {
 
     public static void main(String[] args) {
 
+        
         String[][] seats = new String[5][8];
 
         int seatNumber = 1;
@@ -18,27 +18,29 @@ public class SeatReservation {
 
         Scanner scanner = new Scanner(System.in);
 
+       
         while (true) {
 
-
+            
             System.out.println("        SEAT RESERVATION SYSTEM        ");
+         
             displaySeats(seats);
 
-            System.out.println("\nEnter a seat number to reserve (1–40)");
+            System.out.println("\nEnter a seat number to reserve (1 - 40)");
             System.out.print("or 0 to exit: ");
 
-           
+            
             if (!scanner.hasNextInt()) {
-                System.out.println("Error.  Please enter a valid number.");
-                scanner.next();  
+                System.out.println("Please enter a valid number.");
+                scanner.next();   
                 continue;
             }
 
             int input = scanner.nextInt();
 
-           
+            
             if (input == 0) {
-                System.out.println("\nThank you! Goodbye. ");
+                System.out.println("\nThank you! Goodbye.");
                 break;
             }
 
@@ -48,31 +50,32 @@ public class SeatReservation {
                 continue;
             }
 
-          
-            int targetRow = (input - 1) / 8;    
-            int targetCol = (input - 1) % 8;    
+            
+            int targetRow = (input - 1) / 8;   
+            int targetCol = (input - 1) % 8;   
 
+            
             if (seats[targetRow][targetCol].equals("X")) {
                 System.out.println(" Seat " + input + " is already reserved. Ok.");
             } else {
-              
+                
                 seats[targetRow][targetCol] = "X";
-                System.out.println("✅  Seat " + input + " successfully reserved!");
+                System.out.println(" Seat " + input + " successfully reserved!");
             }
         }
 
         scanner.close();
     }
 
+   
     static void displaySeats(String[][] seats) {
         System.out.println("\n  Col:  1    2    3    4    5    6    7    8");
-        System.out.println("       ─────────────────────────────────────");
-
+        
         for (int row = 0; row < seats.length; row++) {
             System.out.printf("Row %d |", row + 1);   
 
             for (int col = 0; col < seats[row].length; col++) {
-                // Right-align each cell in a field of 4 characters
+                
                 System.out.printf("%4s ", seats[row][col]);
             }
 
