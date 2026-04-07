@@ -1,356 +1,40 @@
-// Seat
-import java.util.Scanner;
-
-public class SeatReservation {
-
-    public static void main(String[] args) {
-
-        
-        String[][] seats = new String[5][8];
-
-        int seatNumber = 1;
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 8; col++) {
-                seats[row][col] = String.valueOf(seatNumber);
-                seatNumber++;
-            }
-        }
-
-        Scanner scanner = new Scanner(System.in);
-
-       
-        while (true) {
-
-            
-            System.out.println("        SEAT RESERVATION SYSTEM        ");
-         
-            displaySeats(seats);
-
-            System.out.println("\nEnter a seat number to reserve (1 - 40)");
-            System.out.print("or 0 to exit: ");
-
-            
-            if (!scanner.hasNextInt()) {
-                System.out.println("Please enter a valid number.");
-                scanner.next();   
-                continue;
-            }
-
-            int input = scanner.nextInt();
-
-            
-            if (input == 0) {
-                System.out.println("\nThank you! Goodbye.");
-                break;
-            }
-
-            
-            if (input < 1 || input > 40) {
-                System.out.println(" Invalid seat number. Please choose between 1 and 40.");
-                continue;
-            }
-
-            
-            int targetRow = (input - 1) / 8;   
-            int targetCol = (input - 1) % 8;   
-
-            
-            if (seats[targetRow][targetCol].equals("X")) {
-                System.out.println(" Seat " + input + " is already reserved. Ok.");
-            } else {
-                
-                seats[targetRow][targetCol] = "X";
-                System.out.println(" Seat " + input + " successfully reserved!");
-            }
-        }
-
-        scanner.close();
-    }
-
-   
-    static void displaySeats(String[][] seats) {
-        System.out.println("\n  Col:  1    2    3    4    5    6    7    8");
-        
-        for (int row = 0; row < seats.length; row++) {
-            System.out.printf("Row %d |", row + 1);   
-
-            for (int col = 0; col < seats[row].length; col++) {
-                
-                System.out.printf("%4s ", seats[row][col]);
-            }
-
-            System.out.println();
-        }
-
-        System.out.println("\n  [ X = Reserved ]");
-    }
-}
-----
-
-//Publication, Book, Magazine, Journal (Interfaces + Inheritance)
-import java.util.Scanner;
-// Base class
-class Publication {
-    protected String title;
-    protected double price;
-
-    public void getData() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter Title: ");
-        title = sc.nextLine();
-        System.out.print("Enter Price: ");
-        price = sc.nextDouble();
-    }
-
-    public void print() {
-        System.out.println("Title: " + title);
-        System.out.println("Price: " + price);
-    }
-}
-// Interface Book
-interface Book {
-    void getData();
-    void print();
-}
-// Interface Magazine
-interface Magazine {
-    void getData();
-    void print();
-}
-// Journal class
-class Journal extends Publication implements Book, Magazine {
-    private int accessionNo;
-    private int volumeNo;
-    private String journalName;
-
-    public void getData() {
-        Scanner sc = new Scanner(System.in);
-
-        super.getData();
-
-        System.out.print("Enter Accession Number: ");
-        accessionNo = sc.nextInt();
-
-        System.out.print("Enter Volume Number: ");
-        volumeNo = sc.nextInt();
-        sc.nextLine();
-
-        System.out.print("Enter Journal Name: ");
-        journalName = sc.nextLine();
-    }
-
-    public void print() {
-        super.print();
-        System.out.println("Accession No: " + accessionNo);
-        System.out.println("Volume No: " + volumeNo);
-        System.out.println("Journal Name: " + journalName);
-        System.out.println("----------------------");
-    }
-}
-// Main class
-public class Main1 {
-    public static void main(String[] args) {
-        Journal[] j = new Journal[5];
-
-        for (int i = 0; i < 5; i++) {
-            System.out.println("\nEnter details for Journal " + (i + 1));
-            j[i] = new Journal();
-            j[i].getData();
-        }
-
-        System.out.println("\n--- Journal Details ---");
-        for (Journal journal : j) {
-            journal.print();
-        }
-    }
-}
-
-
-//Abstract Classes (2D & 3D Figures)
-abstract class Figure {
-    public abstract String toString();
-}
-// 2D abstract class
-abstract class TwoDimensional extends Figure {
-    public abstract double getArea();
-    public abstract double getCircumference();
-}
-// 3D abstract class
-abstract class ThreeDimensional extends Figure {
-    public abstract double getVolume();
-}
-// Circle class
-class Circle extends TwoDimensional {
-    double r;
-
-    Circle(double r) {
-        this.r = r;
-    }
-
-    public double getArea() {
-        return Math.PI * r * r;
-    }
-
-    public double getCircumference() {
-        return 2 * Math.PI * r;
-    }
-
-    public String toString() {
-        return "Circle Radius: " + r;
-    }
-}
-// Sphere class
-class Sphere extends ThreeDimensional {
-    double r;
-
-    Sphere(double r) {
-        this.r = r;
-    }
-
-    public double getVolume() {
-        return (4.0 / 3) * Math.PI * r * r * r;
-    }
-
-    public String toString() {
-        return "Sphere Radius: " + r;
-    }
-}
-// Test class
-public class Main2 {
-    public static void main(String[] args) {
-        Circle c = new Circle(5);
-        System.out.println(c);
-        System.out.println("Area: " + c.getArea());
-        System.out.println("Circumference: " + c.getCircumference());
-
-        Sphere s = new Sphere(3);
-        System.out.println(s);
-        System.out.println("Volume: " + s.getVolume());
-    }
-}
-----
-
-//Bank Account System
-import java.util.Scanner;
-class Account {
-    String name;
-    int accNo;
-    String type;
-    double balance = 20000;
-    double depositAmt, withdrawAmt;
-
-    Account(String name, int accNo, String type) {
-        this.name = name;
-        this.accNo = accNo;
-        this.type = type;
-    }
-
-    void deposit(double amt) {
-        depositAmt = amt;
-        balance += amt;
-    }
-
-    void withdraw(double amt) {
-        withdrawAmt = amt;
-        balance -= amt;
-    }
-
-    void getDetails() {
-        System.out.println("\nDETAIL FOR ACCOUNT");
-        System.out.println("-----------------");
-        System.out.println("Name: " + name);
-        System.out.println("Account number: " + accNo);
-        System.out.println("Account type: " + type);
-        System.out.println("Deposit amount: " + depositAmt);
-        System.out.println("Withdraw amount: " + withdrawAmt);
-        System.out.println("Balance: " + balance);
-    }
-}
-// Main
-public class Main3 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        Account a = new Account("Agash", 111, "Saving");
-
-        System.out.print("Do you want to deposit (y/n): ");
-        if (sc.next().equalsIgnoreCase("y")) {
-            System.out.print("Enter amount: ");
-            a.deposit(sc.nextDouble());
-        }
-
-        System.out.print("Do you want to withdraw (y/n): ");
-        if (sc.next().equalsIgnoreCase("y")) {
-            System.out.print("Enter amount: ");
-            a.withdraw(sc.nextDouble());
-        }
-
-        a.getDetails();
-    }
-}
------
-
-//Person, Student, Employee (Abstract + Inheritance)
-abstract class Person {
-    private String name;
-    private String NICNum;
-
-    public Person(String name, String NICNum) {
-        this.name = name;
-        this.NICNum = NICNum;
-    }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getNICNum() { return NICNum; }
-    public void setNICNum(String NICNum) { this.NICNum = NICNum; }
-
-    public String toString() {
-        return "Person Name: " + name;
-    }
-}
-// Student class
-class Student extends Person {
-    private String regNo, status;
-    private float gpa;
-
-    public Student(String name, String nic, String regNo, String status, float gpa) {
-        super(name, nic);
-        this.regNo = regNo;
-        this.status = status;
-        this.gpa = gpa;
-    }
-
-    public String toString() {
-        return "Student: " + getName();
-    }
-}
-// Employee class
-class Employee2 extends Person {
-    private String empNo, dept;
-    private int hireYear;
-    private double salary;
-
-    public Employee2(String name, String nic, String empNo, int hireYear, String dept, double salary) {
-        super(name, nic);
-        this.empNo = empNo;
-        this.hireYear = hireYear;
-        this.dept = dept;
-        this.salary = salary;
-    }
-
-    public String toString() {
-        return "Employee: " + getName();
-    }
-}
-// Main
-public class Main4 {
-    public static void main(String[] args) {
-        Student s = new Student("Kamal", "123V", "IT01", "1st Year", 3.5f);
-        Employee2 e = new Employee2("Nimal", "456V", "E01", 2020, "IT", 50000);
-
-        System.out.println(s);
-        System.out.println(e);
-    }
-}
+                    ,;-.
+                  ,((--\).
+                 /        \
+                |          |
+                |          |
+               (,'"`.  ,'"`.)
+               :     \/     ;
+               `.o  ,'`.  o,'
+               (|`>'`--'`<'|)            ,-,
+   ,.           |/        \|         ,-./ /
+ _ | \,-.       (          )        | `-'`--.
+( `' (_/|__      \   (o   /       ,-'     ,-'
+ ;         )    ,|`.  - ,'|.      `-.   ) \
+ | (    ,-'   _/ `-.`""',-' \---.   /      ;
+ |     |   ,-'  \  /\  / \  |   |--/       |
+ |     |_,|    / \/  \/   \/\   |          |
+ |     `  \   |              \  /        ,'
+ |         \  |              | /      _,'
+ :          \ ,              `/------'
+  `-.___,---')                `.
+           ,'                   \
+          /                      \
+         :                        :
+         |                      _,|
+          \--.___         __,--' ;
+           `.    `"""""""'      ,'
+             |                  |
+             |      .____,      |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |-._____,-|-.____,-|
+             |_        |_       |
+           ,'  `------'| `-----' \
+          /           _|_         \
+          `--._____,-'   `-.___,-'
