@@ -1,352 +1,40 @@
-//Employee Management System
-import java.util.Scanner;
-class Employee {
-    // Private instance variables (Encapsulation)
-    private int id;
-    private String name;
-    private String department;
-    private double salary;
-
-    // Static variable
-    private static int employeeCount = 0;
-
-    // Constructor using 'this' keyword
-    public Employee(int id, String name, String department, double salary) {
-        this.id = id;
-        this.name = name;
-        this.department = department;
-        this.salary = salary;
-        employeeCount++; // increment count when object is created
-    }
-
-    // Getters
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public double getSalary() {
-        return salary;
-    }
-
-    // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    // Static method
-    public static int getEmployeeCount() {
-        return employeeCount;
-    }
-
-    // Display method
-    public void displayDetails() {
-        System.out.println("Employee ID: " + id);
-        System.out.println("Name       : " + name);
-        System.out.println("Department : " + department);
-        System.out.println("Salary     : " + salary);
-        System.out.println("----------------------------");
-    }
-}
-public class CompanyApp {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        // Ask user for number of employees
-        System.out.print("Enter number of employees: ");
-        int n = sc.nextInt();
-        sc.nextLine(); // consume newline
-
-        // Create array
-        Employee[] employees = new Employee[n];
-
-        // Input employee details
-        for (int i = 0; i < n; i++) {
-            System.out.println("\nEnter details for Employee " + (i + 1));
-
-            System.out.print("ID: ");
-            int id = sc.nextInt();
-            sc.nextLine();
-
-            System.out.print("Name: ");
-            String name = sc.nextLine();
-
-            System.out.print("Department: ");
-            String dept = sc.nextLine();
-
-            System.out.print("Salary: ");
-            double salary = sc.nextDouble();
-            sc.nextLine();
-
-            // Create Employee object
-            employees[i] = new Employee(id, name, dept, salary);
-        }
-
-        // Display all employees
-        System.out.println("\n--- Employee Details ---");
-        for (Employee emp : employees) {
-            emp.displayDetails();
-        }
-
-        // Display total employees
-        System.out.println("Total Employees: " + Employee.getEmployeeCount());
-
-        sc.close();
-    }
-}
-
-
-//Student Course Registration System
-import java.util.Scanner;
-// Student class
-class Student {
-    // Private fields
-    private int id;
-    private String name;
-    private String course;
-    private double marks;
-
-    // Static field
-    static String collegeName = "National College";
-
-    // Getters and Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
-    public double getMarks() {
-        return marks;
-    }
-
-    public void setMarks(double marks) {
-        this.marks = marks;
-    }
-
-    // Method to display student info
-    public void displayStudentInfo() {
-        System.out.println("\n--- Student Details ---");
-        System.out.println("College Name: " + collegeName);
-        System.out.println("ID: " + id);
-        System.out.println("Name: " + name);
-        System.out.println("Course: " + course);
-        System.out.println("Marks: " + marks);
-    }
-}
-// Main class
-public class StudentApp {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        // Ask number of students
-        System.out.print("Enter number of students (max 5): ");
-        int n = sc.nextInt();
-
-        if (n > 5) {
-            System.out.println("Maximum limit is 5 students.");
-            n = 5;
-        }
-
-        // Create array
-        Student[] students = new Student[n];
-
-        // Input student details
-        for (int i = 0; i < n; i++) {
-            students[i] = new Student();
-
-            System.out.println("\nEnter details for student " + (i + 1));
-
-            System.out.print("Enter ID: ");
-            students[i].setId(sc.nextInt());
-
-            sc.nextLine(); // consume newline
-
-            System.out.print("Enter Name: ");
-            students[i].setName(sc.nextLine());
-
-            System.out.print("Enter Course: ");
-            students[i].setCourse(sc.nextLine());
-
-            System.out.print("Enter Marks: ");
-            students[i].setMarks(sc.nextDouble());
-        }
-
-        // Display student details
-        System.out.println("\n===== Student Information =====");
-        for (int i = 0; i < n; i++) {
-            students[i].displayStudentInfo();
-        }
-
-        sc.close();
-    }
-}
-
-
-//Smart Utility Billing System
-// Customer Class (Encapsulation)
-class Customer {
-    private final int customerId; // read-only
-    private String name;
-    private String address;
-
-    public Customer(int customerId, String name, String address) {
-        this.customerId = customerId;
-        setName(name);
-        this.address = address;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be empty");
-        }
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-}
-// Abstract Class (Abstraction)
-abstract class UtilityAccount {
-    private Customer customer;
-    private double unitsConsumed;
-    protected double billAmount; // protected so subclasses can calculate
-
-    public UtilityAccount(Customer customer, double unitsConsumed) {
-        this.customer = customer;
-        setUnitsConsumed(unitsConsumed);
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public double getUnitsConsumed() {
-        return unitsConsumed;
-    }
-
-    public void setUnitsConsumed(double unitsConsumed) {
-        if (unitsConsumed < 0) {
-            throw new IllegalArgumentException("Units cannot be negative");
-        }
-        this.unitsConsumed = unitsConsumed;
-    }
-
-    public double getBillAmount() {
-        return billAmount;
-    }
-
-    // Abstract methods
-    public abstract void calculateBill();
-
-    public void generateBill() {
-        System.out.println("Customer ID: " + customer.getCustomerId());
-        System.out.println("Name: " + customer.getName());
-        System.out.println("Units Consumed: " + unitsConsumed);
-        System.out.println("Total Bill: $" + billAmount);
-        System.out.println("---------------------------");
-    }
-}
-// ElectricityAccount (Inheritance)
-class ElectricityAccount extends UtilityAccount {
-    private static final double RATE = 6;
-
-    public ElectricityAccount(Customer customer, double units) {
-        super(customer, units);
-    }
-
-    @Override
-    public void calculateBill() {
-        billAmount = getUnitsConsumed() * RATE;
-
-        if (getUnitsConsumed() > 300) {
-            billAmount += billAmount * 0.10; // 10% surcharge
-        }
-    }
-}
-// WaterAccount (Inheritance)
-class WaterAccount extends UtilityAccount {
-    private static final double RATE = 2;
-
-    public WaterAccount(Customer customer, double units) {
-        super(customer, units);
-    }
-
-    @Override
-    public void calculateBill() {
-        billAmount = getUnitsConsumed() * RATE;
-
-        if (getUnitsConsumed() > 500) {
-            billAmount += 150; // fixed charge
-        }
-    }
-}
-// Main Class (Polymorphism)
-public class UtilityApp {
-    public static void main(String[] args) {
-
-        Customer c1 = new Customer(1, "Kamal", "Negombo");
-        Customer c2 = new Customer(2, "Nimal", "Colombo");
-
-        // Polymorphism: using parent reference
-        UtilityAccount[] accounts = new UtilityAccount[2];
-
-        accounts[0] = new ElectricityAccount(c1, 350);
-        accounts[1] = new WaterAccount(c2, 600);
-
-        for (UtilityAccount acc : accounts) {
-            acc.calculateBill();   // polymorphic call
-            acc.generateBill();    // same method, different behavior
-        }
-    }
-}
+                    ,;-.
+                  ,((--\).
+                 /        \
+                |          |
+                |          |
+               (,'"`.  ,'"`.)
+               :     \/     ;
+               `.o  ,'`.  o,'
+               (|`>'`--'`<'|)            ,-,
+   ,.           |/        \|         ,-./ /
+ _ | \,-.       (          )        | `-'`--.
+( `' (_/|__      \   (o   /       ,-'     ,-'
+ ;         )    ,|`.  - ,'|.      `-.   ) \
+ | (    ,-'   _/ `-.`""',-' \---.   /      ;
+ |     |   ,-'  \  /\  / \  |   |--/       |
+ |     |_,|    / \/  \/   \/\   |          |
+ |     `  \   |              \  /        ,'
+ |         \  |              | /      _,'
+ :          \ ,              `/------'
+  `-.___,---')                `.
+           ,'                   \
+          /                      \
+         :                        :
+         |                      _,|
+          \--.___         __,--' ;
+           `.    `"""""""'      ,'
+             |                  |
+             |      .____,      |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |         |        |
+             |-._____,-|-.____,-|
+             |_        |_       |
+           ,'  `------'| `-----' \
+          /           _|_         \
+          `--._____,-'   `-.___,-'
