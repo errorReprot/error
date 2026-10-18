@@ -1,40 +1,202 @@
-                    ,;-.
-                  ,((--\).
-                 /        \
-                |          |
-                |          |
-               (,'"`.  ,'"`.)
-               :     \/     ;
-               `.o  ,'`.  o,'
-               (|`>'`--'`<'|)            ,-,
-   ,.           |/        \|         ,-./ /
- _ | \,-.       (          )        | `-'`--.
-( `' (_/|__      \   (o   /       ,-'     ,-'
- ;         )    ,|`.  - ,'|.      `-.   ) \
- | (    ,-'   _/ `-.`""',-' \---.   /      ;
- |     |   ,-'  \  /\  / \  |   |--/       |
- |     |_,|    / \/  \/   \/\   |          |
- |     `  \   |              \  /        ,'
- |         \  |              | /      _,'
- :          \ ,              `/------'
-  `-.___,---')                `.
-           ,'                   \
-          /                      \
-         :                        :
-         |                      _,|
-          \--.___         __,--' ;
-           `.    `"""""""'      ,'
-             |                  |
-             |      .____,      |
-             |         |        |
-             |         |        |
-             |         |        |
-             |         |        |
-             |         |        |
-             |         |        |
-             |         |        |
-             |-._____,-|-.____,-|
-             |_        |_       |
-           ,'  `------'| `-----' \
-          /           _|_         \
-          `--._____,-'   `-.___,-'
+
+
+#include <graphics.h>
+#include <math.h>
+#include <stdlib.h>
+#include <conio.h>
+
+#define PI 3.14159265358979323846
+#define DRAW_COLOR WHITE
+
+/* 1. DDA LINE DRAWING */
+void DDA(int x1, int y1, int x2, int y2)
+{
+    int dx = x2 - x1, dy = y2 - y1;
+    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+    if (steps == 0) { putpixel(x1, y1, DRAW_COLOR); return; }
+
+    float xInc = (float)dx / steps, yInc = (float)dy / steps;
+    float x = (float)x1, y = (float)y1;
+    for (int i = 0; i <= steps; i++) {
+        putpixel((int)round(x), (int)round(y), DRAW_COLOR);
+        x += xInc;
+        y += yInc;
+    }
+}
+
+/* 2. BRESENHAM LINE DRAWING — all octants */
+void BresenhamLine(int x1, int y1, int x2, int y2)
+{
+    int dx = abs(x2 - x1), dy = abs(y2 - y1);
+    int sx = (x1 < x2) ? 1 : -1, sy = (y1 < y2) ? 1 : -1;
+    int err = dx - dy;
+
+    while (1) {
+        putpixel(x1, y1, DRAW_COLOR);
+        if (x1 == x2 && y1 == y2) break;
+        int e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; x1 += sx; }
+        if (e2 < dx)  { err += dx; y1 += sy; }
+    }
+}
+
+/* 3. BRESENHAM / MIDPOINT CIRCLE DRAWING */
+void BresenhamCircle(int xc, int yc, int radius)
+{
+    int x = 0, y = radius, p = 1 - radius;
+    while (x <= y) {
+        putpixel(xc+x, yc+y, DRAW_COLOR);
+        putpixel(xc-x, yc+y, DRAW_COLOR);
+        putpixel(xc+x, yc-y, DRAW_COLOR);
+        putpixel(xc-x, yc-y, DRAW_COLOR);
+        putpixel(xc+y, yc+x, DRAW_COLOR);
+        putpixel(xc-y, yc+x, DRAW_COLOR);
+        putpixel(xc+y, yc-x, DRAW_COLOR);
+        putpixel(xc-y, yc-x, DRAW_COLOR);
+        if (p < 0) p += 2*x + 3;
+        else { p += 2*(x-y) + 5; y--; }
+        x++;
+    }
+}
+
+/* 4. TRANSLATION OF A POINT */
+void translatePoint(int x, int y, int tx, int ty, int *xn, int *yn)
+{
+    *xn = x + tx;
+    *yn = y + ty;
+}
+
+/* 5. TRANSLATION OF A LINE */
+void translateLine(int x1, int y1, int x2, int y2, int tx, int ty)
+{
+    line(x1 + tx, y1 + ty, x2 + tx, y2 + ty);
+}
+
+/* 6. TRANSLATION OF A POLYGON */
+void translatePolygon(const int x[], const int y[], int n,
+                      int tx, int ty, int newX[], int newY[])
+{
+    for (int i = 0; i < n; i++) {
+        newX[i] = x[i] + tx;
+        newY[i] = y[i] + ty;
+    }
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        line(newX[i], newY[i], newX[j], newY[j]);
+    }
+}
+
+/* 7. SCALING OF A POINT ABOUT THE ORIGIN */
+void scalePoint(int x, int y, float sx, float sy, int *xn, int *yn)
+{
+    *xn = (int)round(x * sx);
+    *yn = (int)round(y * sy);
+}
+
+/* 8. SCALING OF A POLYGON ABOUT THE ORIGIN */
+void scalePolygon(const int x[], const int y[], int n,
+                  float sx, float sy, int newX[], int newY[])
+{
+    for (int i = 0; i < n; i++) {
+        newX[i] = (int)round(x[i] * sx);
+        newY[i] = (int)round(y[i] * sy);
+    }
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        line(newX[i], newY[i], newX[j], newY[j]);
+    }
+}
+
+/* 9. ROTATION OF A POINT ABOUT THE ORIGIN */
+void rotatePoint(int x, int y, float angleDegrees, int *xn, int *yn)
+{
+    double rad = angleDegrees * PI / 180.0;
+    *xn = (int)round(x*cos(rad) - y*sin(rad));
+    *yn = (int)round(x*sin(rad) + y*cos(rad));
+}
+
+/* 10. ROTATION OF A POLYGON ABOUT THE ORIGIN */
+void rotatePolygon(const int x[], const int y[], int n, float angleDegrees,
+                   int newX[], int newY[])
+{
+    double rad = angleDegrees * PI / 180.0;
+    for (int i = 0; i < n; i++) {
+        newX[i] = (int)round(x[i]*cos(rad) - y[i]*sin(rad));
+        newY[i] = (int)round(x[i]*sin(rad) + y[i]*cos(rad));
+    }
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        line(newX[i], newY[i], newX[j], newY[j]);
+    }
+}
+
+/* 11. ROTATION OF A POINT ABOUT A PIVOT */
+void rotatePointAboutPivot(int x, int y, int xp, int yp, float angleDegrees,
+                           int *xn, int *yn)
+{
+    double rad = angleDegrees * PI / 180.0;
+    double dx = x - xp, dy = y - yp;
+    *xn = (int)round(xp + dx*cos(rad) - dy*sin(rad));
+    *yn = (int)round(yp + dx*sin(rad) + dy*cos(rad));
+}
+
+/* 12. SCALING OF A POINT ABOUT A FIXED PIVOT */
+void scalePointAboutPivot(int x, int y, int xp, int yp, float sx, float sy,
+                          int *xn, int *yn)
+{
+    *xn = (int)round(xp + (x - xp)*sx);
+    *yn = (int)round(yp + (y - yp)*sy);
+}
+
+/* 13. COMBINED SCALE -> ROTATE ABOUT ORIGIN -> TRANSLATE */
+void scaleRotateTranslatePolygon(const int x[], const int y[], int n,
+                                 float sx, float sy, float angleDegrees,
+                                 int tx, int ty, int newX[], int newY[])
+{
+    double rad = angleDegrees * PI / 180.0;
+    double c = cos(rad), s = sin(rad);
+    for (int i = 0; i < n; i++) {
+        double xs = x[i] * sx, ys = y[i] * sy;
+        double xr = xs*c - ys*s, yr = xs*s + ys*c;
+        newX[i] = (int)round(xr + tx);
+        newY[i] = (int)round(yr + ty);
+    }
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        line(newX[i], newY[i], newX[j], newY[j]);
+    }
+}
+
+/* 14. EXAMPLE MAIN — remove this if your practical supplies its own main() */
+int main(void)
+{
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    DDA(50, 50, 200, 100);
+    BresenhamLine(50, 120, 200, 170);
+    BresenhamCircle(300, 150, 50);
+
+    int x[] = {100, 150, 125};
+    int y[] = {250, 250, 200};
+    int n = 3, newX[3], newY[3];
+
+    setcolor(WHITE);
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        line(x[i], y[i], x[j], y[j]);
+    }
+
+    setcolor(YELLOW);
+    translatePolygon(x, y, n, 80, 0, newX, newY);
+
+    setcolor(GREEN);
+    scalePolygon(x, y, n, 1.5f, 1.5f, newX, newY);
+
+    setcolor(CYAN);
+    rotatePolygon(x, y, n, 30.0f, newX, newY);
+
+    getch();
+    closegraph();
+    return 0;
+}
