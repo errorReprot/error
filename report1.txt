@@ -1,3 +1,179 @@
+//DDA
+
+import javax.swing.*;
+import java.awt.*;
+
+public class DDATest extends JPanel {
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.RED);
+        dda(g, 50, 50, 400, 300);
+    }
+
+    void dda(Graphics g, int x1, int y1, int x2, int y2) {
+        int dx = x2 - x1, dy = y2 - y1;
+        int steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+        float xi = (float) dx / steps;
+        float yi = (float) dy / steps;
+        float x = x1, y = y1;
+
+        for (int i = 0; i <= steps; i++) {
+            g.fillRect(Math.round(x), Math.round(y), 2, 2);
+            x += xi;
+            y += yi;
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame f = new JFrame();
+        f.add(new DDATest());
+        f.setSize(500, 400);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+}
+
+//BresenhamLine
+
+import javax.swing.*;
+import java.awt.*;
+
+public class BresenhamLineTest extends JPanel {
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.RED);
+        line(g, 50, 50, 400, 300);
+    }
+
+    void line(Graphics g, int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int sx = x1 < x2 ? 1 : -1;
+        int sy = y1 < y2 ? 1 : -1;
+        int p = dx - dy;
+
+        while (true) {
+            g.fillRect(x1, y1, 2, 2);
+            if (x1 == x2 && y1 == y2) break;
+
+            int e = 2 * p;
+
+            if (e > -dy) {
+                p -= dy;
+                x1 += sx;
+            }
+            if (e < dx) {
+                p += dx;
+                y1 += sy;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame f = new JFrame();
+        f.add(new BresenhamLineTest());
+        f.setSize(500, 400);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+}
+
+//Midpoint Circle
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MidpointCircleTest extends JPanel {
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.RED);
+        circle(g, 250, 200, 100);
+    }
+
+    void circle(Graphics g, int xc, int yc, int r) {
+        int x = 0, y = r, p = 1 - r;
+
+        while (x <= y) {
+            g.fillRect(xc+x, yc+y, 2, 2);
+            g.fillRect(xc-x, yc+y, 2, 2);
+            g.fillRect(xc+x, yc-y, 2, 2);
+            g.fillRect(xc-x, yc-y, 2, 2);
+            g.fillRect(xc+y, yc+x, 2, 2);
+            g.fillRect(xc-y, yc+x, 2, 2);
+            g.fillRect(xc+y, yc-x, 2, 2);
+            g.fillRect(xc-y, yc-x, 2, 2);
+
+            x++;
+
+            if (p < 0)
+                p += 2*x + 1;
+            else {
+                y--;
+                p += 2*(x-y) + 1;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame f = new JFrame();
+        f.add(new MidpointCircleTest());
+        f.setSize(500, 450);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+}
+
+//Bresenham Circle
+
+import javax.swing.*;
+import java.awt.*;
+
+public class BresenhamCircleTest extends JPanel {
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.RED);
+        circle(g, 250, 200, 100);
+    }
+
+    void circle(Graphics g, int xc, int yc, int r) {
+        int x = 0, y = r, p = 3 - 2*r;
+
+        while (x <= y) {
+            g.fillRect(xc+x, yc+y, 2, 2);
+            g.fillRect(xc-x, yc+y, 2, 2);
+            g.fillRect(xc+x, yc-y, 2, 2);
+            g.fillRect(xc-x, yc-y, 2, 2);
+            g.fillRect(xc+y, yc+x, 2, 2);
+            g.fillRect(xc-y, yc+x, 2, 2);
+            g.fillRect(xc+y, yc-x, 2, 2);
+            g.fillRect(xc-y, yc-x, 2, 2);
+
+            if (p < 0)
+                p += 4*x + 6;
+            else {
+                p += 4*(x-y) + 10;
+                y--;
+            }
+            x++;
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame f = new JFrame();
+        f.add(new BresenhamCircleTest());
+        f.setSize(500, 450);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+}
+
+//uda tika sampurna code wena wenama
+
 import javax.swing.*;
 import java.awt.*;
 
