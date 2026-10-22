@@ -174,251 +174,116 @@ public class BresenhamCircleTest extends JPanel {
 
 //uda tika sampurna code wena wenama
 
-import javax.swing.*;
+
+//Ass 04
+
 import java.awt.*;
-
-public class GraphicsAlgorithms extends JPanel {
-
-
-    // =================================
-    // BRESENHAM LINE
-    // =================================
-
-    public void bresenhamLine(
-            Graphics g,
-            int x1, int y1,
-            int x2, int y2) {
-
-        int dx = Math.abs(x2 - x1);
-        int dy = Math.abs(y2 - y1);
-
-        int sx = (x1 < x2) ? 1 : -1;
-        int sy = (y1 < y2) ? 1 : -1;
-
-        int error = dx - dy;
-
-        while (true) {
-
-            g.drawLine(x1, y1, x1, y1);
-
-            if (x1 == x2 && y1 == y2)
-                break;
-
-            int e2 = 2 * error;
-
-            if (e2 > -dy) {
-                error -= dy;
-                x1 += sx;
-            }
-
-            if (e2 < dx) {
-                error += dx;
-                y1 += sy;
-            }
-        }
-    }
-
-
-    // =================================
-    // BRESENHAM CIRCLE
-    // =================================
-
-    public void bresenhamCircle(
-            Graphics g,
-            int xc,
-            int yc,
-            int r) {
-
-        int x = 0;
-        int y = r;
-
-        int d = 3 - 2 * r;
-
-        while (x <= y) {
-
-            circlePoints(g, xc, yc, x, y);
-
-            if (d < 0) {
-
-                d = d + 4 * x + 6;
-
-            } else {
-
-                d = d + 4 * (x - y) + 10;
-                y--;
-            }
-
-            x++;
-        }
-    }
-
-
-    public void circlePoints(
-            Graphics g,
-            int xc, int yc,
-            int x, int y) {
-
-        g.drawLine(xc+x, yc+y, xc+x, yc+y);
-        g.drawLine(xc-x, yc+y, xc-x, yc+y);
-        g.drawLine(xc+x, yc-y, xc+x, yc-y);
-        g.drawLine(xc-x, yc-y, xc-x, yc-y);
-
-        g.drawLine(xc+y, yc+x, xc+y, yc+x);
-        g.drawLine(xc-y, yc+x, xc-y, yc+x);
-        g.drawLine(xc+y, yc-x, xc+y, yc-x);
-        g.drawLine(xc-y, yc-x, xc-y, yc-x);
-    }
-
-
-    // =================================
-    // TRANSLATION
-    // =================================
-
-    public void translate(
-            int[][] points,
-            int tx,
-            int ty) {
-
-        for (int i = 0; i < points.length; i++) {
-
-            points[i][0] += tx;
-            points[i][1] += ty;
-        }
-    }
-
-
-    // =================================
-    // SCALING
-    // =================================
-
-    public void scale(
-            int[][] points,
-            double sx,
-            double sy) {
-
-        for (int i = 0; i < points.length; i++) {
-
-            points[i][0] =
-                (int) Math.round(points[i][0] * sx);
-
-            points[i][1] =
-                (int) Math.round(points[i][1] * sy);
-        }
-    }
-
-
-    // =================================
-    // ROTATION
-    // =================================
-
-    public void rotate(
-            int[][] points,
-            double angle,
-            int xPivot,
-            int yPivot) {
-
-        double rad = Math.toRadians(angle);
-
-        for (int i = 0; i < points.length; i++) {
-
-            int x = points[i][0] - xPivot;
-            int y = points[i][1] - yPivot;
-
-            int newX =
-                (int) Math.round(
-                    x * Math.cos(rad)
-                    - y * Math.sin(rad)
-                );
-
-            int newY =
-                (int) Math.round(
-                    x * Math.sin(rad)
-                    + y * Math.cos(rad)
-                );
-
-            points[i][0] = newX + xPivot;
-            points[i][1] = newY + yPivot;
-        }
-    }
-
-
-    // =================================
-    // DRAW POLYGON USING BRESENHAM
-    // =================================
-
-    public void drawPolygon(
-            Graphics g,
-            int[][] points) {
-
-        for (int i = 0; i < points.length; i++) {
-
-            int next =
-                (i + 1) % points.length;
-
-            bresenhamLine(
-                g,
-                points[i][0],
-                points[i][1],
-                points[next][0],
-                points[next][1]
-            );
-        }
-    }
-
-
-    // =================================
-    // DISPLAY
-    // =================================
-
-    public void paintComponent(Graphics g) {
-
-        super.paintComponent(g);
-
-        // Line
-        bresenhamLine(
-            g,
-            50, 50,
-            300, 150
-        );
-
-        // Circle
-        bresenhamCircle(
-            g,
-            400, 150,
-            80
-        );
-
-        // Triangle
-        int[][] triangle = {
-            {100, 400},
-            {150, 300},
-            {200, 400}
-        };
-
-        drawPolygon(g, triangle);
-    }
-
-
-    // =================================
-    // MAIN
-    // =================================
-
-    public static void main(String[] args) {
-
-        JFrame frame =
-            new JFrame("Graphics Algorithms");
-
-        GraphicsAlgorithms panel =
-            new GraphicsAlgorithms();
-
-        frame.add(panel);
-
-        frame.setSize(700, 600);
-
-        frame.setDefaultCloseOperation(
-            JFrame.EXIT_ON_CLOSE
-        );
-
-        frame.setVisible(true);
-    }
+import javax.swing.*;
+
+public class QuesionAssessment extends JPanel {
+
+	// DDA line drawing
+		void dda(Graphics g, int x0, int y0, int x1, int y1) {
+			int dx = x1 - x0;
+			int dy = y1 - y0;
+			int steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+			float xinc = (float) dx / steps;
+			float yinc = (float) dy / steps;
+			float x = x0;
+			float y = y0;
+
+			for (int i = 0; i <= steps; i++) {
+				g.fillRect(Math.round(x), Math.round(y), 2, 2);
+				x += xinc;
+				y += yinc;
+			}
+		}
+		
+		
+		//draw a shape by joining its points
+		void drawPolygon(Graphics g,int [][]points) {
+			for(int i=0;i<points.length-1;i++) {
+				dda(g,points[i][0],points[i][1],points[i+1][0],points[i+1][1]);
+			}
+		}
+		
+		//scaling
+		void scale(int [][]points,double s) {
+			for(int i=0;i<points.length;i++) {
+				points[i][0]=(int)Math.round(points[i][0]*s);
+				points[i][1]=(int)Math.round(points[i][1]*s);
+				
+			}
+		}
+		
+		//rotation
+		
+		void rotate(int[][]points,double angle) {
+			double rad=Math.toRadians(angle);
+			double cos=Math.cos(rad);
+			double sin=Math.sin(rad);
+			
+			for(int i=0;i<points.length;i++) {
+				double x=points[i][0];
+				double y =points[i][1];
+				
+				points[i][0]=(int)Math.round(x*cos- y*sin);
+				points[i][1]=(int)Math.round(x*sin+y*cos);
+				
+			}
+		}
+		
+		void translation(int [][]points,int tx,int ty) {
+			for(int i=0;i<points.length;i++) {
+				points[i][0]+=tx;
+				points[i][1]+=ty;
+				
+			}
+		}
+		
+		void drawHouse(Graphics g, Color c, double angle ,int tx,int ty) {
+			int[][] base = { {-100,100}, {100,100}, {100,300}, {-100,300}, {-100,100} };
+			int[][] roof = { {-100,100}, {0,0}, {100,100}, {-100,100} };
+			int[][] door = { {-30,300}, {30,300}, {30,220}, {-30,220}, {-30,300} };
+
+			scale(base,0.6);
+			scale(roof,0.6);
+			scale(door,0.6);
+			
+			rotate(base,angle);
+			rotate(roof,angle);
+			rotate(door,angle);
+			
+			translation(base,tx,ty);
+			translation(roof,tx,ty);
+			translation(door,tx,ty);
+			
+			g.setColor(c);
+			drawPolygon(g,base);
+			drawPolygon(g,roof);
+			drawPolygon(g,door);
+						
+			
+		}
+		
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			drawHouse(g, Color.red,     0,   300,  40);   // top
+			drawHouse(g, Color.green,   90,  560, 300);   // right
+			drawHouse(g, Color.orange,  180, 300, 560);   // bottom
+			drawHouse(g, Color.magenta, 270,  40, 300);   // left
+			
+		}
+		public static void main(String[] args) {
+			JFrame frame = new JFrame("question");
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			QuesionAssessment panel = new QuesionAssessment();
+			panel.setPreferredSize(new Dimension(600, 600));
+			frame.add(panel);
+			frame.pack();
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+		}
+		
 }
