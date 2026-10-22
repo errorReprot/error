@@ -276,14 +276,12 @@ public class QuesionAssessment extends JPanel {
 			
 		}
 		public static void main(String[] args) {
-			JFrame frame = new JFrame("question");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			QuesionAssessment panel = new QuesionAssessment();
-			panel.setPreferredSize(new Dimension(600, 600));
-			frame.add(panel);
-			frame.pack();
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
+			JFrame frame = new JFrame("Four Transformed Houses");
+	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        frame.setSize(800, 800);
+	        frame.add(new QuesionAssessment());
+	        frame.setVisible(true);
 		}
+		
 		
 }
