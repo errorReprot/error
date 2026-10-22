@@ -1,287 +1,492 @@
-//DDA
+package exam;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
-public class DDATest extends JPanel {
+public class test extends JPanel {
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.RED);
-        dda(g, 50, 50, 400, 300);
-    }
+    // =========================================================
+    // Q1 (a): DDA LINE DRAWING ALGORITHM
+    // =========================================================
 
-    void dda(Graphics g, int x1, int y1, int x2, int y2) {
-        int dx = x2 - x1, dy = y2 - y1;
+    public void ddaLine(Graphics g, int x1, int y1, int x2, int y2) {
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
         int steps = Math.max(Math.abs(dx), Math.abs(dy));
 
-        float xi = (float) dx / steps;
-        float yi = (float) dy / steps;
-        float x = x1, y = y1;
+        if (steps == 0) {
+            g.fillRect(x1, y1, 1, 1);
+            return;
+        }
+
+        float x_inc = (float) dx / steps;
+        float y_inc = (float) dy / steps;
+
+        float x = x1;
+        float y = y1;
 
         for (int i = 0; i <= steps; i++) {
-            g.fillRect(Math.round(x), Math.round(y), 2, 2);
-            x += xi;
-            y += yi;
+            g.fillRect(Math.round(x), Math.round(y), 1, 1);
+
+            x += x_inc;
+            y += y_inc;
         }
     }
 
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.add(new DDATest());
-        f.setSize(500, 400);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-    }
-}
 
-//BresenhamLine
+    // =========================================================
+    // Q1 (b): DDA LINE FROM (3,4) TO (15,10)
+    //
+    // dx = 15 - 3 = 12
+    // dy = 10 - 4 = 6
+    // steps = max(12,6) = 12
+    //
+    // x_increment = 12/12 = 1
+    // y_increment = 6/12 = 0.5
+    //
+    // Successive coordinates:
+    // (3,4), (4,5), (5,5), (6,6), (7,6),
+    // (8,7), (9,7), (10,8), (11,8), (12,9),
+    // (13,9), (14,10), (15,10)
+    //
+    // The rounded pixel coordinates are shown above.
+    // =========================================================
 
-import javax.swing.*;
-import java.awt.*;
 
-public class BresenhamLineTest extends JPanel {
+    // =========================================================
+    // Q1 (c): MIDPOINT CIRCLE ALGORITHM
+    // =========================================================
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.RED);
-        line(g, 50, 50, 400, 300);
-    }
+    public void midpointCircle(Graphics g, int xc, int yc, int r) {
 
-    void line(Graphics g, int x1, int y1, int x2, int y2) {
-        int dx = Math.abs(x2 - x1);
-        int dy = Math.abs(y2 - y1);
-        int sx = x1 < x2 ? 1 : -1;
-        int sy = y1 < y2 ? 1 : -1;
-        int p = dx - dy;
+        int x = 0;
+        int y = r;
+        int p = 1 - r;
 
-        while (true) {
-            g.fillRect(x1, y1, 2, 2);
-            if (x1 == x2 && y1 == y2) break;
+        plotCircle(g, xc, yc, x, y);
 
-            int e = 2 * p;
-
-            if (e > -dy) {
-                p -= dy;
-                x1 += sx;
-            }
-            if (e < dx) {
-                p += dx;
-                y1 += sy;
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.add(new BresenhamLineTest());
-        f.setSize(500, 400);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-    }
-}
-
-//Midpoint Circle
-
-import javax.swing.*;
-import java.awt.*;
-
-public class MidpointCircleTest extends JPanel {
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.RED);
-        circle(g, 250, 200, 100);
-    }
-
-    void circle(Graphics g, int xc, int yc, int r) {
-        int x = 0, y = r, p = 1 - r;
-
-        while (x <= y) {
-            g.fillRect(xc+x, yc+y, 2, 2);
-            g.fillRect(xc-x, yc+y, 2, 2);
-            g.fillRect(xc+x, yc-y, 2, 2);
-            g.fillRect(xc-x, yc-y, 2, 2);
-            g.fillRect(xc+y, yc+x, 2, 2);
-            g.fillRect(xc-y, yc+x, 2, 2);
-            g.fillRect(xc+y, yc-x, 2, 2);
-            g.fillRect(xc-y, yc-x, 2, 2);
+        while (x < y) {
 
             x++;
 
-            if (p < 0)
-                p += 2*x + 1;
-            else {
+            if (p < 0) {
+                p += 2 * x + 1;
+            } else {
                 y--;
-                p += 2*(x-y) + 1;
+                p += 2 * (x - y) + 1;
             }
+
+            plotCircle(g, xc, yc, x, y);
         }
     }
 
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.add(new MidpointCircleTest());
-        f.setSize(500, 450);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
+
+    // =========================================================
+    // HELPER METHOD: PLOT EIGHT-WAY CIRCLE SYMMETRY
+    // =========================================================
+
+    public void plotCircle(Graphics g, int xc, int yc, int x, int y) {
+
+        g.fillRect(xc + x, yc + y, 1, 1);
+        g.fillRect(xc - x, yc + y, 1, 1);
+
+        g.fillRect(xc + x, yc - y, 1, 1);
+        g.fillRect(xc - x, yc - y, 1, 1);
+
+        g.fillRect(xc + y, yc + x, 1, 1);
+        g.fillRect(xc - y, yc + x, 1, 1);
+
+        g.fillRect(xc + y, yc - x, 1, 1);
+        g.fillRect(xc - y, yc - x, 1, 1);
     }
-}
 
-//Bresenham Circle
 
-import javax.swing.*;
-import java.awt.*;
+    // =========================================================
+    // Q2 (a): TRANSFORM ONE POINT
+    //
+    // Operations:
+    // 1. Scale: sx = 1.5, sy = 0.75
+    // 2. Rotate 90 degrees counterclockwise
+    // 3. Translate: Tx = 100, Ty = 80
+    //
+    // Screen coordinates increase downward, but the mathematical
+    // transformation below uses standard Cartesian coordinates.
+    // =========================================================
 
-public class BresenhamCircleTest extends JPanel {
+    public int[] transformPoint(int x, int y) {
 
+        double sx = 1.5;
+        double sy = 0.75;
+
+        // Step 1: Scaling
+        double xs = x * sx;
+        double ys = y * sy;
+
+        // Step 2: Rotate 90 degrees counterclockwise
+        double xr = -ys;
+        double yr = xs;
+
+        // Step 3: Translation
+        double xt = xr + 100;
+        double yt = yr + 80;
+
+        // Round only the final coordinates
+        return new int[] {
+            (int) Math.round(xt),
+            (int) Math.round(yt)
+        };
+    }
+
+
+    // =========================================================
+    // Q2 (b): TRANSFORM TRIANGLE VERTICES
+    //
+    // A = (-40,-20)
+    // B = (40,-20)
+    // C = (0,50)
+    // =========================================================
+
+    public void drawTransformedTriangle(Graphics g) {
+
+        int[] A = transformPoint(-40, -20);
+        int[] B = transformPoint(40, -20);
+        int[] C = transformPoint(0, 50);
+
+        // Draw triangle
+        g.setColor(Color.BLUE);
+
+        ddaLine(g, A[0], A[1], B[0], B[1]);
+        ddaLine(g, B[0], B[1], C[0], C[1]);
+        ddaLine(g, C[0], C[1], A[0], A[1]);
+
+        // Draw vertex labels
+        g.drawString("A", A[0] + 5, A[1] - 5);
+        g.drawString("B", B[0] + 5, B[1] - 5);
+        g.drawString("C", C[0] + 5, C[1] - 5);
+    }
+
+
+    // =========================================================
+    // Q2 (c): DRAW COORDINATE AXES
+    // =========================================================
+
+    public void drawAxes(Graphics g) {
+
+        g.setColor(Color.BLACK);
+
+        // Horizontal axis
+        ddaLine(g, 0, 300, 600, 300);
+
+        // Vertical axis
+        ddaLine(g, 300, 0, 300, 600);
+
+        g.drawString("X", 580, 290);
+        g.drawString("Y", 310, 20);
+        g.drawString("Origin", 305, 315);
+    }
+
+
+    // =========================================================
+    // Q3 (a): TRANSFORM A POINT FOR THE ROBOTS
+    //
+    // Order:
+    // 1. Scale
+    // 2. Rotate about the origin
+    // 3. Translate
+    // =========================================================
+
+    public double[] transformRobotPoint(
+            double x, double y,
+            double sx, double sy,
+            double angle,
+            double tx, double ty) {
+
+        // Step 1: Scale
+        double xs = x * sx;
+        double ys = y * sy;
+
+        // Step 2: Rotate
+        double radians = Math.toRadians(angle);
+
+        double xr = xs * Math.cos(radians)
+                  - ys * Math.sin(radians);
+
+        double yr = xs * Math.sin(radians)
+                  + ys * Math.cos(radians);
+
+        // Step 3: Translate
+        double xt = xr + tx;
+        double yt = yr + ty;
+
+        return new double[] {xt, yt};
+    }
+
+
+    // =========================================================
+    // Q3 (a): DRAW TRANSFORMED LINE
+    // =========================================================
+
+    public void robotLine(
+            Graphics g,
+            double x1, double y1,
+            double x2, double y2,
+            double sx, double sy,
+            double angle, double tx, double ty) {
+
+        double[] p1 = transformRobotPoint(
+            x1, y1, sx, sy, angle, tx, ty
+        );
+
+        double[] p2 = transformRobotPoint(
+            x2, y2, sx, sy, angle, tx, ty
+        );
+
+        ddaLine(
+            g,
+            screenX(p1[0]),
+            screenY(p1[1]),
+            screenX(p2[0]),
+            screenY(p2[1])
+        );
+    }
+
+
+    // =========================================================
+    // Q3 (a): DRAW TRANSFORMED CLOSED RECTANGLE
+    // =========================================================
+
+    public void robotRectangle(
+            Graphics g,
+            double[][] points,
+            double sx, double sy,
+            double angle, double tx, double ty) {
+
+        for (int i = 0; i < points.length; i++) {
+
+            int next = (i + 1) % points.length;
+
+            robotLine(
+                g,
+                points[i][0], points[i][1],
+                points[next][0], points[next][1],
+                sx, sy, angle, tx, ty
+            );
+        }
+    }
+
+
+    // =========================================================
+    // Q3 (a): DRAW TRANSFORMED CIRCLE
+    //
+    // Transform the center and scale the radius.
+    // The specified robot transformations use uniform scaling.
+    // =========================================================
+
+    public void robotCircle(
+            Graphics g,
+            double xc, double yc, double r,
+            double scale,
+            double angle, double tx, double ty) {
+
+        double[] center = transformRobotPoint(
+            xc, yc,
+            scale, scale,
+            angle, tx, ty
+        );
+
+        midpointCircle(
+            g,
+            screenX(center[0]),
+            screenY(center[1]),
+            (int) Math.round(r * scale)
+        );
+    }
+
+
+    // =========================================================
+    // HELPER METHODS: CONVERT MATHEMATICAL COORDINATES TO SCREEN
+    //
+    // Mathematical origin is placed at the center of the window.
+    // Positive mathematical Y points upward.
+    // =========================================================
+
+    public int screenX(double x) {
+        return (int) Math.round(300 + x);
+    }
+
+    public int screenY(double y) {
+        return (int) Math.round(300 - y);
+    }
+
+
+    // =========================================================
+    // Q3 (a) AND (b): DRAW ONE COMPLETE ROBOT
+    // =========================================================
+
+    public void drawRobot(
+            Graphics g,
+            double sx, double sy,
+            double angle, double tx, double ty) {
+
+        // Head rectangle
+        double[][] head = {
+            {-20, 20},
+            {20, 20},
+            {20, 60},
+            {-20, 60}
+        };
+
+        // Body rectangle
+        double[][] body = {
+            {-30, -30},
+            {30, -30},
+            {30, 20},
+            {-30, 20}
+        };
+
+        // Draw head and body
+        robotRectangle(g, head, sx, sy, angle, tx, ty);
+        robotRectangle(g, body, sx, sy, angle, tx, ty);
+
+        // Left arm
+        robotLine(
+            g, -30, 10, -55, -5,
+            sx, sy, angle, tx, ty
+        );
+
+        // Right arm
+        robotLine(
+            g, 30, 10, 55, -5,
+            sx, sy, angle, tx, ty
+        );
+
+        // Left leg
+        robotLine(
+            g, -18, -30, -18, -60,
+            sx, sy, angle, tx, ty
+        );
+
+        // Right leg
+        robotLine(
+            g, 18, -30, 18, -60,
+            sx, sy, angle, tx, ty
+        );
+
+        // Antenna
+        robotLine(
+            g, 0, 60, 0, 75,
+            sx, sy, angle, tx, ty
+        );
+
+        // Antenna circle
+        double scale = sx;
+
+        robotCircle(
+            g, 0, 80, 5,
+            scale, angle, tx, ty
+        );
+    }
+
+
+    // =========================================================
+    // PAINT COMPONENT: DISPLAY Q2 AND Q3
+    //
+    // Q1 methods can be tested separately.
+    // =========================================================
+
+    @Override
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
+
+        // -----------------------------------------------------
+        // Q2 (c): COORDINATE AXES AND TRANSFORMED TRIANGLE
+        // -----------------------------------------------------
+
+        drawAxes(g);
+        drawTransformedTriangle(g);
+
+
+        // -----------------------------------------------------
+        // Q3 (b): DRAW THREE ROBOTS IN DIFFERENT COLORS
+        //
+        // Left robot:
+        // Scale = (0.75, 0.75)
+        // Rotation = -15 degrees
+        // Translation = (-120, 0)
+        // -----------------------------------------------------
+
         g.setColor(Color.RED);
-        circle(g, 250, 200, 100);
+
+        drawRobot(
+            g,
+            0.75, 0.75,
+            -15,
+            -120, 0
+        );
+
+
+        // -----------------------------------------------------
+        // Q3 (b): CENTER ROBOT
+        //
+        // Scale = (1.00, 1.00)
+        // Rotation = 0 degrees
+        // Translation = (0, 0)
+        // -----------------------------------------------------
+
+        g.setColor(Color.BLUE);
+
+        drawRobot(
+            g,
+            1.00, 1.00,
+            0,
+            0, 0
+        );
+
+
+        // -----------------------------------------------------
+        // Q3 (b): RIGHT ROBOT
+        //
+        // Scale = (1.25, 1.25)
+        // Rotation = 15 degrees
+        // Translation = (120, 0)
+        // -----------------------------------------------------
+
+        g.setColor(Color.GREEN);
+
+        drawRobot(
+            g,
+            1.25, 1.25,
+            15,
+            120, 0
+        );
     }
 
-    void circle(Graphics g, int xc, int yc, int r) {
-        int x = 0, y = r, p = 3 - 2*r;
 
-        while (x <= y) {
-            g.fillRect(xc+x, yc+y, 2, 2);
-            g.fillRect(xc-x, yc+y, 2, 2);
-            g.fillRect(xc+x, yc-y, 2, 2);
-            g.fillRect(xc-x, yc-y, 2, 2);
-            g.fillRect(xc+y, yc+x, 2, 2);
-            g.fillRect(xc-y, yc+x, 2, 2);
-            g.fillRect(xc+y, yc-x, 2, 2);
-            g.fillRect(xc-y, yc-x, 2, 2);
-
-            if (p < 0)
-                p += 4*x + 6;
-            else {
-                p += 4*(x-y) + 10;
-                y--;
-            }
-            x++;
-        }
-    }
+    // =========================================================
+    // MAIN METHOD
+    // =========================================================
 
     public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.add(new BresenhamCircleTest());
-        f.setSize(500, 450);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
+
+        JFrame frame = new JFrame(
+            "Computer Graphics Practical Exam"
+        );
+
+        test panel = new test();
+
+        frame.add(panel);
+
+        frame.setSize(650, 650);
+
+        frame.setDefaultCloseOperation(
+            JFrame.EXIT_ON_CLOSE
+        );
+
+        frame.setLocationRelativeTo(null);
+
+        frame.setVisible(true);
     }
-}
-
-//uda tika sampurna code wena wenama
-
-
-//Ass 04
-
-import java.awt.*;
-import javax.swing.*;
-
-public class QuesionAssessment extends JPanel {
-
-	// DDA line drawing
-		void dda(Graphics g, int x0, int y0, int x1, int y1) {
-			int dx = x1 - x0;
-			int dy = y1 - y0;
-			int steps = Math.max(Math.abs(dx), Math.abs(dy));
-
-			float xinc = (float) dx / steps;
-			float yinc = (float) dy / steps;
-			float x = x0;
-			float y = y0;
-
-			for (int i = 0; i <= steps; i++) {
-				g.fillRect(Math.round(x), Math.round(y), 2, 2);
-				x += xinc;
-				y += yinc;
-			}
-		}
-		
-		
-		//draw a shape by joining its points
-		void drawPolygon(Graphics g,int [][]points) {
-			for(int i=0;i<points.length-1;i++) {
-				dda(g,points[i][0],points[i][1],points[i+1][0],points[i+1][1]);
-			}
-		}
-		
-		//scaling
-		void scale(int [][]points,double s) {
-			for(int i=0;i<points.length;i++) {
-				points[i][0]=(int)Math.round(points[i][0]*s);
-				points[i][1]=(int)Math.round(points[i][1]*s);
-				
-			}
-		}
-		
-		//rotation
-		
-		void rotate(int[][]points,double angle) {
-			double rad=Math.toRadians(angle);
-			double cos=Math.cos(rad);
-			double sin=Math.sin(rad);
-			
-			for(int i=0;i<points.length;i++) {
-				double x=points[i][0];
-				double y =points[i][1];
-				
-				points[i][0]=(int)Math.round(x*cos- y*sin);
-				points[i][1]=(int)Math.round(x*sin+y*cos);
-				
-			}
-		}
-		
-		void translation(int [][]points,int tx,int ty) {
-			for(int i=0;i<points.length;i++) {
-				points[i][0]+=tx;
-				points[i][1]+=ty;
-				
-			}
-		}
-		
-		void drawHouse(Graphics g, Color c, double angle ,int tx,int ty) {
-			int[][] base = { {-100,100}, {100,100}, {100,300}, {-100,300}, {-100,100} };
-			int[][] roof = { {-100,100}, {0,0}, {100,100}, {-100,100} };
-			int[][] door = { {-30,300}, {30,300}, {30,220}, {-30,220}, {-30,300} };
-
-			scale(base,0.6);
-			scale(roof,0.6);
-			scale(door,0.6);
-			
-			rotate(base,angle);
-			rotate(roof,angle);
-			rotate(door,angle);
-			
-			translation(base,tx,ty);
-			translation(roof,tx,ty);
-			translation(door,tx,ty);
-			
-			g.setColor(c);
-			drawPolygon(g,base);
-			drawPolygon(g,roof);
-			drawPolygon(g,door);
-						
-			
-		}
-		
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			drawHouse(g, Color.red,     0,   300,  40);   // top
-			drawHouse(g, Color.green,   90,  560, 300);   // right
-			drawHouse(g, Color.orange,  180, 300, 560);   // bottom
-			drawHouse(g, Color.magenta, 270,  40, 300);   // left
-			
-		}
-		public static void main(String[] args) {
-			JFrame frame = new JFrame("Four Transformed Houses");
-	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        frame.setSize(800, 800);
-	        frame.add(new QuesionAssessment());
-	        frame.setVisible(true);
-		}
-		
-		
 }
